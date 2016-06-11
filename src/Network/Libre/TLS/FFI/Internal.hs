@@ -6,7 +6,7 @@ module Network.Libre.TLS.FFI.Internal where
 import Foreign.C.Types
 import Foreign.Ptr
 import Foreign.C.String
-import Data.Word(Word32(..))
+import Data.Word(Word32(..), Word8(..))
 
 {-
 --   #define TLS_WANT_POLLIN    -2
@@ -22,6 +22,8 @@ data LibTLSConfig
 newtype TLSConfigPtr = TheTLSConfigPtr (Ptr LibTLSConfig)
 
 newtype LibreFD = LibreFD { unLibreFD :: CInt }
+
+newtype LibreSocket = LibreSocket { unLibreSocket :: CInt }
 
 --int tls_init(void);
 foreign import ccall safe "tls_init" tls_init_c :: IO CInt
@@ -128,35 +130,68 @@ foreign import ccall safe "tls_configure" tls_configure_c :: TLSPtr -> TLSConfig
 
 
 --void tls_free(struct tls *_ctx);
-foreign import ccall safe  "tls_free" tls_free :: TLSPtr -> IO ()
+foreign import ccall safe  "tls_free" tls_free_c :: TLSPtr -> IO ()
 
 --int tls_accept_fds(struct tls *_ctx, struct tls **_cctx, int _fd_read,
 --    int _fd_write);
-foreign import ccall safe  "tls_accept_fds" tls_accept_fds :: TLSPtr -> Ptr (TLSPtr) -> LibreFD -> LibreFD -> IO CInt
+foreign import ccall safe  "tls_accept_fds" tls_accept_fds_c :: TLSPtr -> Ptr TLSPtr -> LibreFD -> LibreFD -> IO CInt
 
 
 --int tls_accept_socket(struct tls *_ctx, struct tls **_cctx, int _socket);
+foreign import ccall safe "tls_accept_socket" tls_accept_socket_c :: TLSPtr -> Ptr TLSPtr -> LibreSocket -> IO CInt
+
 --int tls_connect(struct tls *_ctx, const char *_host, const char *_port);
+foreign import ccall safe "tls_connect" tls_connect_c :: TLSPtr -> CString -> CString -> IO CInt
+
 --int tls_connect_fds(struct tls *_ctx, int _fd_read, int _fd_write,
 --    const char *_servername);
+foreign import ccall safe "tls_connect_fds" tls_connect_fds_c :: TLSPtr -> LibreFD -> LibreFD -> CString -> IO CInt
+
 --int tls_connect_servername(struct tls *_ctx, const char *_host,
 --    const char *_port, const char *_servername);
+foreign import ccall safe "tls_connect_servername" tls_connect_servername_c :: TLSPtr -> CString -> CString -> CString -> IO CInt
+
 --int tls_connect_socket(struct tls *_ctx, int _s, const char *_servername);
+foreign import ccall safe "tls_connect_socket" tls_connect_socket_c :: TLSPtr -> LibreSocket -> CString -> IO CInt
+
 --int tls_handshake(struct tls *_ctx);
+foreign import ccall safe "tls_handshake" tls_handshake_c :: TLSPtr -> IO CInt
+
 --ssize_t tls_read(struct tls *_ctx, void *_buf, size_t _buflen);
+foreign import ccall safe "tls_read" tls_read_c :: TLSPtr -> Ptr Word8 -> CSize -> IO CSize
+
 --ssize_t tls_write(struct tls *_ctx, const void *_buf, size_t _buflen);
+foreign import ccall safe "tls_write" tls_write_c :: TLSPtr -> Ptr Word8 -> CSize -> IO CSize
+
 --int tls_close(struct tls *_ctx);
+foreign import ccall safe "tls_close" tls_close_c :: TLSPtr -> IO CInt
 
 --int tls_peer_cert_provided(struct tls *ctx);
+foreign import ccall safe "tls_peer_cert_provided" tls_peer_cert_provided_c :: TLSPtr -> IO CInt
+
 --int tls_peer_cert_contains_name(struct tls *ctx, const char *name);
+foreign import ccall safe "tls_peer_cert_contains_name" tls_peer_cert_contains_name_c :: TLSPtr -> CString -> IO CInt
 
 --const char * tls_peer_cert_hash(struct tls *_ctx);
+foreign import ccall safe "tls_peer_cert_hash" tls_peer_cert_hash_c :: TLSPtr -> IO CString
+
 --const char * tls_peer_cert_issuer(struct tls *ctx);
+foreign import ccall safe "tls_peer_cert_issuer" tls_peer_cert_issuer_c :: TLSPtr -> IO CString
+
 --const char * tls_peer_cert_subject(struct tls *ctx);
+foreign import ccall safe "tls_peer_cert_subject" tls_peer_cert_subject_c :: TLSPtr -> IO CString
+
 --time_t  tls_peer_cert_notbefore(struct tls *ctx);
+foreign import ccall safe "tls_peer_cert_notbefore" tls_peer_cert_notbefore_c :: TLSPtr -> IO CTime
+
 --time_t  tls_peer_cert_notafter(struct tls *ctx);
+foreign import ccall safe "tls_peer_cert_notafter" tls_peer_cert_notafter_c :: TLSPtr -> IO CTime
 
 --const char * tls_conn_version(struct tls *ctx);
+foreign import ccall safe "tls_conn_version" tls_conn_version_c :: TLSPtr -> IO CString
+
 --const char * tls_conn_cipher(struct tls *ctx);
+foreign import ccall safe "tls_conn_cipher" tls_conn_cipher :: TLSPtr -> IO CString
 
 --uint8_t *tls_load_file(const char *_file, size_t *_len, char *_password);
+foreign import ccall safe "tls_load_file" tls_load_file :: CString -> CSize -> CString -> IO CString

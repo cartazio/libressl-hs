@@ -68,7 +68,10 @@ library
                        ,monad-ste >= 0.1 && < 0.2
   if os(OSX)
     extra-lib-dirs: /usr/local/opt/libressl/lib
-    extra-libraries: tls
+  if os(linux)
+    extra-lib-dirs: /usr/local/lib
+
+  extra-libraries: tls
   -- Directories containing source files.
   hs-source-dirs:      src
 
