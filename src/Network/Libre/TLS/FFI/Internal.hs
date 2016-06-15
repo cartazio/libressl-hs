@@ -7,12 +7,32 @@ import Foreign.C.Types
 import Foreign.Ptr
 import Foreign.C.String
 import Data.Word(Word32(..), Word8(..))
+import System.Posix.Types
 
 {-
 --   #define TLS_WANT_POLLIN    -2
 --   #define TLS_WANT_POLLOUT  -3
 
+
+RETURN VALUES
+The tls_peer_cert_provided() and tls_peer_cert_contains_name() functions return 1 if the check succeeds, and 0 if it does not. Functions that return a time_t will return a time in epoch-seconds on success, and -1 on error. Functions that return a ssize_t will return a size on success, and -1 on error. All other functions that return int will return 0 on success and -1 on error. Functions that return a pointer will return NULL on error, which indicates an out of memory condition.
+The tls_handshake(), tls_read(), tls_write(), and tls_close() functions have two special return values:
+
+TLS_WANT_POLLIN
+    The underlying read file descriptor needs to be readable in order to continue.
+TLS_WANT_POLLOUT
+    The underlying write file descriptor needs to be writeable in order to continue.
+
+In the case of blocking file descriptors, the same function call should be repeated immediately. In the case of non-blocking file descriptors, the same function call should be repeated when the required condition has been met.
+Callers of these functions cannot rely on the value of the global errno. To prevent mishandling of error conditions, tls_handshake(), tls_read(), tls_write(), and tls_close() all explicitly clear errno.
+
+
 -}
+
+
+
+
+
 --struct tls;
 data LibTLSContext
 newtype TLSPtr = TheTLSPTR (Ptr LibTLSContext)
@@ -111,7 +131,7 @@ foreign import ccall safe "tls_config_verify_client_optional" tls_config_verify_
 foreign import ccall safe "tls_config_clear_keys" tls_config_clear_keys_c :: TLSConfigPtr -> IO ()
 
 --int tls_config_parse_protocols(uint32_t *_protocols, const char *_protostr);
-foreign import ccall safe "tls_config_parse_protocols" tls_config_parse_protocols_c :: Ptr Word32 -> CString -> IO CInt
+foreign import ccall safe "tls_config_parse_protocols" tls_config_parse_protocols_c :: CString -> CString -> IO CInt
 --- Ptr Word32 holds a bitset of protocols, its part of the output
 
 --struct tls *tls_client(void);
@@ -138,7 +158,7 @@ foreign import ccall safe  "tls_accept_fds" tls_accept_fds_c :: TLSPtr -> Ptr TL
 
 
 --int tls_accept_socket(struct tls *_ctx, struct tls **_cctx, int _socket);
-foreign import ccall safe "tls_accept_socket" tls_accept_socket_c :: TLSPtr -> Ptr TLSPtr -> LibreSocket -> IO CInt
+foreign import ccall safe "tls_accept_socket" tls_accept_socket_c :: TLSPtr -> Ptr (Ptr LibTLSContext) -> LibreSocket -> IO CInt
 
 --int tls_connect(struct tls *_ctx, const char *_host, const char *_port);
 foreign import ccall safe "tls_connect" tls_connect_c :: TLSPtr -> CString -> CString -> IO CInt
@@ -158,10 +178,10 @@ foreign import ccall safe "tls_connect_socket" tls_connect_socket_c :: TLSPtr ->
 foreign import ccall safe "tls_handshake" tls_handshake_c :: TLSPtr -> IO CInt
 
 --ssize_t tls_read(struct tls *_ctx, void *_buf, size_t _buflen);
-foreign import ccall safe "tls_read" tls_read_c :: TLSPtr -> Ptr Word8 -> CSize -> IO CSize
+foreign import ccall safe "tls_read" tls_read_c :: TLSPtr -> CString -> CSize -> IO CSsize
 
 --ssize_t tls_write(struct tls *_ctx, const void *_buf, size_t _buflen);
-foreign import ccall safe "tls_write" tls_write_c :: TLSPtr -> Ptr Word8 -> CSize -> IO CSize
+foreign import ccall safe "tls_write" tls_write_c :: TLSPtr -> CString -> CSize -> IO CInt
 
 --int tls_close(struct tls *_ctx);
 foreign import ccall safe "tls_close" tls_close_c :: TLSPtr -> IO CInt

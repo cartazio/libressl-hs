@@ -53,7 +53,6 @@ library
   -- Modules exported by the library.
   exposed-modules:     Network.Libre.TLS
                       ,Network.Libre.TLS.FFI.Internal
-
   -- Modules included in this library but not exported.
   -- other-modules:
 
@@ -62,10 +61,10 @@ library
 
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.9 && <4.10
-                       ,transformers >= 0.5
-                       ,vector >= 0.11 && < 0.12
-                       ,primitive >= 0.6 && < 0.7
-                       ,monad-ste >= 0.1 && < 0.2
+                     , transformers >= 0.5
+                     , vector >= 0.11 && < 0.12
+                     , primitive >= 0.6 && < 0.7
+                     , monad-ste >= 0.1 && < 0.2
   if os(OSX)
     extra-lib-dirs: /usr/local/opt/libressl/lib
   if os(linux)
