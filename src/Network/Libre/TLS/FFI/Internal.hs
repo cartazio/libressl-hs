@@ -181,7 +181,7 @@ foreign import ccall safe "tls_handshake" tls_handshake_c :: TLSPtr -> IO CInt
 foreign import ccall safe "tls_read" tls_read_c :: TLSPtr -> CString -> CSize -> IO CSsize
 
 --ssize_t tls_write(struct tls *_ctx, const void *_buf, size_t _buflen);
-foreign import ccall safe "tls_write" tls_write_c :: TLSPtr -> CString -> CSize -> IO CInt
+foreign import ccall safe "tls_write" tls_write_c :: TLSPtr -> CString -> CSize -> IO CSsize
 
 --int tls_close(struct tls *_ctx);
 foreign import ccall safe "tls_close" tls_close_c :: TLSPtr -> IO CInt
