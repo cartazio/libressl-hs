@@ -211,7 +211,7 @@ foreign import ccall safe "tls_peer_cert_notafter" tls_peer_cert_notafter_c :: T
 foreign import ccall safe "tls_conn_version" tls_conn_version_c :: TLSPtr -> IO CString
 
 --const char * tls_conn_cipher(struct tls *ctx);
-foreign import ccall safe "tls_conn_cipher" tls_conn_cipher :: TLSPtr -> IO CString
+foreign import ccall safe "tls_conn_cipher" tls_conn_cipher_c :: TLSPtr -> IO CString
 
 --uint8_t *tls_load_file(const char *_file, size_t *_len, char *_password);
-foreign import ccall safe "tls_load_file" tls_load_file :: CString -> CSize -> CString -> IO CString
+foreign import ccall safe "tls_load_file" tls_load_file_c :: CString -> CSize -> CString -> IO CString
