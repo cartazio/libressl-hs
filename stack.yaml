@@ -1,0 +1,9 @@
+resolver: nightly-2016-07-31
+packages:
+- '.'
+extra-deps:
+- monad-ste-0.1.0.0
+
+flags: {}
+
+extra-package-dbs: []
