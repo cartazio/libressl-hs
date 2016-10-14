@@ -49,6 +49,10 @@ extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 
+source-repository head
+  type: git
+  location: https://github.com/cartazio/libressl-hs.git
+
 library
   -- Modules exported by the library.
   exposed-modules:     Network.Libre.TLS
@@ -78,3 +82,16 @@ library
 
   -- Base language which the package is written in.
   default-language:    Haskell2010
+
+
+test-suite hunit
+  type: exitcode-stdio-1.0
+  main-is: hunit.hs
+  ghc-options: -w -threaded -rtsopts -with-rtsopts=-N
+  hs-source-dirs: tests
+  build-depends:
+      base
+      ,containers
+      ,HUnit >= 1.2
+      ,hspec == 2.3.*
+      ,libressl
