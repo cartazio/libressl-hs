@@ -65,12 +65,14 @@ library
                      , vector >= 0.11 && < 0.12
                      , primitive >= 0.6 && < 0.7
                      , monad-ste >= 0.1 && < 0.2
+
+  pkgconfig-depends: libtls
+
   if os(OSX)
     extra-lib-dirs: /usr/local/opt/libressl/lib
   if os(linux)
     extra-lib-dirs: /usr/local/lib
 
-  extra-libraries: tls
   -- Directories containing source files.
   hs-source-dirs:      src
 
