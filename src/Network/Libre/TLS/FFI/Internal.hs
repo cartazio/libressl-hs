@@ -31,6 +31,32 @@ Callers of these functions cannot rely on the value of the global errno. To prev
 
 
 
+{-
+
+  define TLS_API 20160904
+
+  define TLS_PROTOCOL_TLSv1_0  (1 << 1)
+  define TLS_PROTOCOL_TLSv1_1  (1 << 2)
+  define TLS_PROTOCOL_TLSv1_2  (1 << 3)
+  define TLS_PROTOCOL_TLSv1 \
+   (TLS_PROTOCOL_TLSv1_0|TLS_PROTOCOL_TLSv1_1|TLS_PROTOCOL_TLSv1_2)
+
+  define TLS_PROTOCOLS_ALL TLS_PROTOCOL_TLSv1
+  define TLS_PROTOCOLS_DEFAULT TLS_PROTOCOL_TLSv1_2
+
+  define TLS_WANT_POLLIN   -2
+  define TLS_WANT_POLLOUT  -3
+
+struct tls;
+struct tls_config;
+
+typedef ssize_t (*tls_read_cb)(struct tls *_ctx, void *_buf, size_t _buflen,
+    void *_cb_arg);
+typedef ssize_t (*tls_write_cb)(struct tls *_ctx, const void *_buf,
+    size_t _buflen, void *_cb_arg);
+
+-}
+
 
 
 --struct tls;

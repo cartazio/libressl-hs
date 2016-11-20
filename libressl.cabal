@@ -72,8 +72,7 @@ library
 
   pkgconfig-depends: libtls
 
-  if os(OSX)
-    extra-lib-dirs: /usr/local/opt/libressl/lib
+
   if os(linux)
     extra-lib-dirs: /usr/local/lib
 
