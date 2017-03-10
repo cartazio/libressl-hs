@@ -59,6 +59,7 @@ typedef ssize_t (*tls_write_cb)(struct tls *_ctx,
 type TlsReadCallback  b = TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize
 foreign import ccall "wrapper"
   mkReadCB :: TlsReadCallback b -> IO (FunPtr (TlsReadCallback b))
+
 type TlsWriteCallback  b = TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize
 foreign import ccall "wrapper"
   mkWriteCB :: TlsReadCallback b -> IO (FunPtr (TlsReadCallback b))
@@ -76,8 +77,7 @@ newtype LibreFD = LibreFD { unLibreFD :: CInt }
 newtype LibreSocket = LibreSocket { unLibreSocket :: CInt }
 
 -- tls_accept_cbs
--- int tls_accept_cbs(struct tls *_ctx, struct tls **_cctx,
---    tls_read_cb _read_cb, tls_write_cb _write_cb, void *_cb_arg);
+-- int tls_accept_cbs(struct tls *_ctx, struct tls **_cctx, tls_read_cb _read_cb, tls_write_cb _write_cb, void *_cb_arg);
 foreign import ccall safe "tls_accept_cbs"  tls_accept_cbs_c :: TLSPtr -> Ptr (TLSPtr) -> (FunPtr (TlsReadCallback a)) -> (FunPtr (TlsWriteCallback a)) -> Ptr a -> IO CInt
 foreign import ccall safe "tls_accept_fds" tls_accept_fds_c :: TLSPtr -> Ptr TLSPtr -> LibreFD -> LibreFD -> IO CInt
 foreign import ccall safe "tls_accept_socket" tls_accept_socket_c :: TLSPtr -> Ptr (Ptr LibTLSContext) -> LibreSocket -> IO CInt

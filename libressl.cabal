@@ -70,7 +70,7 @@ library
                      , primitive >= 0.6 && < 0.7
                      , monad-ste >= 0.1 && < 0.2
 
-  pkgconfig-depends: libtls >= 2.4.4
+
 --  extra-libraries: libtls
 -- mac users may want to do something like
 -- set -xl PKG_CONFIG_PATH /usr/local/opt/libressl/lib/pkgconfig
@@ -78,6 +78,7 @@ library
 
   if os(linux)
     extra-lib-dirs: /usr/local/lib
+    pkgconfig-depends: libtls >= 2.4.4
   if os(OSX)
     extra-lib-dirs: /usr/local/opt/libressl/lib
     include-dirs: /usr/local/opt/libressl/include
