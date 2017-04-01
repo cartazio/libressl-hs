@@ -56,13 +56,13 @@ typedef ssize_t (*tls_write_cb)(struct tls *_ctx,
    const void *_buf, size_t _buflen, void *_cb_arg);
 
 -}
-type TlsReadCallback  b = TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize
+newtype TlsReadCallback  b = TLSReadCB (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize)
 foreign import ccall "wrapper"
-  mkReadCB :: TlsReadCallback b -> IO (FunPtr (TlsReadCallback b))
+  mkReadCB :: (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize) -> IO (FunPtr (TlsReadCallback b))
 
-type TlsWriteCallback  b = TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize
+newtype TlsWriteCallback  b = TLSWriteCB  (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize)
 foreign import ccall "wrapper"
-  mkWriteCB :: TlsWriteCallback b -> IO (FunPtr (TlsWriteCallback b))
+  mkWriteCB :: (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize) -> IO (FunPtr (TlsWriteCallback b))
 
 --struct tls;
 data LibTLSContext
