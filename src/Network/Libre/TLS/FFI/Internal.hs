@@ -62,7 +62,7 @@ foreign import ccall "wrapper"
 
 type TlsWriteCallback  b = TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize
 foreign import ccall "wrapper"
-  mkWriteCB :: TlsReadCallback b -> IO (FunPtr (TlsReadCallback b))
+  mkWriteCB :: TlsWriteCallback b -> IO (FunPtr (TlsWriteCallback b))
 
 --struct tls;
 data LibTLSContext
@@ -96,6 +96,8 @@ foreign import ccall safe "tls_config_parse_protocols" tls_config_parse_protocol
 foreign import ccall safe "tls_config_prefer_ciphers_client" tls_config_prefer_ciphers_client_c :: TLSConfigPtr -> IO ()
 foreign import ccall safe "tls_config_prefer_ciphers_server" tls_config_prefer_ciphers_server_c :: TLSConfigPtr -> IO ()
 --tls_config_set_alpn
+--int  tls_config_set_alpn(struct tls_config *config, const char *alpn);
+foreign import ccall safe "tls_config_set_alpn" tls_config_set_alpn_c ::  TLSConfigPtr -> CString -> IO CInt
 foreign import ccall safe "tls_config_set_ca_file" tls_config_set_ca_file_c ::  TLSConfigPtr -> CString -> IO CInt
 foreign import ccall safe "tls_config_set_ca_mem" tls_config_set_ca_mem_c :: TLSConfigPtr -> Ptr CChar -> CSize -> IO CInt
 foreign import ccall safe "tls_config_set_ca_path" tls_config_set_ca_path_c :: TLSConfigPtr -> CString -> IO CInt
@@ -114,7 +116,7 @@ foreign import ccall safe "tls_config_verify" tls_config_verify_c :: TLSConfigPt
 foreign import ccall safe "tls_config_verify_client" tls_config_verify_client_c :: TLSConfigPtr -> IO ()
 foreign import ccall safe "tls_config_verify_client_optional" tls_config_verify_client_optional_c :: TLSConfigPtr -> IO ()
 foreign import ccall safe "tls_configure" tls_configure_c :: TLSPtr -> TLSConfigPtr -> IO CInt
---tls_conn_alpn_selected
+foreign import ccall safe "tls_conn_alpn_selected" tls_conn_alpn_selected_c :: TLSPtr -> CString
 foreign import ccall safe "tls_conn_cipher" tls_conn_cipher_c :: TLSPtr -> IO CString
 --tls_conn_servername
 foreign import ccall safe "tls_conn_version" tls_conn_version_c :: TLSPtr -> IO CString
