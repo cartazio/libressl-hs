@@ -3,11 +3,13 @@
 module Network.Libre.TLS.FFI.Internal where
 
 
-import Foreign.C.Types
-import Foreign.Ptr
-import Foreign.C.String
+import Control.Monad.Primitive
 import Data.Word(Word32(..), Word8(..))
+import Foreign.C.Types
+import Foreign.C.String
+import Foreign.Ptr
 import System.Posix.Types
+
 
 {-
 --   #define TLS_WANT_POLLIN    -2
@@ -63,6 +65,19 @@ foreign import ccall "wrapper"
 newtype TlsWriteCallback  b = TLSWriteCB  (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize)
 foreign import ccall "wrapper"
   mkWriteCB :: (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> IO CSsize) -> IO (FunPtr (TlsWriteCallback b))
+
+primWriteCallback :: (PrimBase m)
+  =>  (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> m CSsize)
+      -> m  (FunPtr (TlsWriteCallback b))
+primWriteCallback = \ f -> ( unsafePrimToPrim $
+  mkWriteCB $! (\tl buf buflen arg -> unsafePrimToIO  $ f tl buf buflen arg ))
+
+primReadCallback :: (PrimBase m)
+  =>  (TLSPtr -> {-Ptr a-}  CString -> CSize -> Ptr b -> m CSsize)
+      -> m  (FunPtr (TlsReadCallback b))
+primReadCallback = \ f -> ( unsafePrimToPrim $
+  mkReadCB $! (\tl buf buflen arg -> unsafePrimToIO $  f tl buf buflen arg ))
+
 
 --struct tls;
 data LibTLSContext
