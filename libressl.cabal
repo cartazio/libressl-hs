@@ -64,9 +64,9 @@ library
   -- other-extensions:
 
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.9 && <4.10
+  build-depends:       base >=4.9 && <4.12
                      , transformers >= 0.5
-                     , vector >= 0.11 && < 0.12
+                     , vector >= 0.11 && < 0.13
                      , primitive >= 0.6 && < 0.7
                      , monad-ste >= 0.1 && < 0.2
 
