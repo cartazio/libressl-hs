@@ -102,7 +102,8 @@ typedef ssize_t (*tls_write_cb)(struct tls *_ctx,
    const void *_buf, size_t _buflen, void *_cb_arg);
 
 -}
-newtype CastedStablePtr a = StablePtr ( Ptr ())
+-- this is for passing information to and from C land callbacks
+newtype CastedStablePtr a = CastedStablePtr ( Ptr ())
 
 newtype TlsReadCallback  b = TLSReadCB (TLSPtr -> {-Ptr a-} Ptr Word8 {-CString-} -> CSize -> CastedStablePtr b -> IO CSsize)
 foreign import ccall "wrapper"
@@ -260,7 +261,7 @@ foreign import ccall safe "tls_peer_cert_subject" tls_peer_cert_subject_c :: TLS
 --tls_peer_ocsp_this_update(struct tls *_ctx) -> time_t  ;
 --tls_peer_ocsp_url(struct tls *_ctx) -> const char *;
 
-foreign import ccall safe "tls_read" tls_read_c :: TLSPtr -> CString -> CSize -> IO CSsize
+foreign import ccall safe "tls_write" tls_read_c :: TLSPtr -> CString -> CSize -> IO CSsize
 --tls_reset
 foreign import ccall safe "tls_server" allocate_fresh_tls_server_context_c :: IO TLSPtr -- not sure if thats a good name
 foreign import ccall safe "tls_write" tls_write_c :: TLSPtr -> CString -> CSize -> IO CSsize
